@@ -1,3 +1,15 @@
+﻿---
+layout: post
+title: "深入理解java虚拟机 摘要（七）--JDK监控和故障处理工具"
+subtitle: "jdk的命令行工具"
+date: 
+author: "王鹏"
+header-img: 
+cdn: 'header-off'
+tags: 
+        - 'java虚拟机' 
+        - 'java'
+---
 # 深入理解java虚拟机 摘要 #
 ***
 ##二、jdk的命令行工具 ##

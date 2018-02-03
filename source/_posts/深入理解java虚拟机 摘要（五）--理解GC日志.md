@@ -1,3 +1,15 @@
+---
+layout: post
+title: "深入理解java虚拟机 摘要（五）--理解GC日志"
+subtitle: "自动内存管理机制"
+date: 
+author: "王鹏"
+header-img: 
+cdn: 'header-off'
+tags: 
+        - 'java虚拟机' 
+        - 'java'
+---
 # 深入理解java虚拟机 摘要 #
 ***
 ## 一、自动内存管理机制 ##

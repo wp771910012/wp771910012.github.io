@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="java开发# seo key words">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png">
+    <link rel="alternate" type="application/atom+xml" title="王鹏的博客" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        王鹏的博客
+        
+    </title>
+
+    <link rel="canonical" href="https://wp771910012.github.io/2018/02/03/深入理解java虚拟机 摘要（三）--实战：OutOfMemoryError异常/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    王鹏的博客
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1></h1>
+                    
+                    <span class="meta">
+                         作者 王鹏
+                        <span>
+                          日期 2018-02-03
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h1 id="深入理解java虚拟机-摘要"><a href="#深入理解java虚拟机-摘要" class="headerlink" title="深入理解java虚拟机 摘要"></a>深入理解java虚拟机 摘要</h1><hr>
+<h2 id="一、自动内存管理机制"><a href="#一、自动内存管理机制" class="headerlink" title="一、自动内存管理机制"></a>一、自动内存管理机制</h2><hr>
+<h3 id="3-实战：OutOfMemoryError异常"><a href="#3-实战：OutOfMemoryError异常" class="headerlink" title="3. 实战：OutOfMemoryError异常"></a>3. 实战：OutOfMemoryError异常</h3><ul>
+<li><p>Java堆溢出:</p>
+<blockquote>
+<p><strong>测试代码:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;public class Tests &#123;</span><br><span class="line">&gt;    static class Obj&#123;</span><br><span class="line">&gt;    &#125;</span><br><span class="line">&gt;</span><br><span class="line">&gt;    public static  void  main(String[] args) throws &gt;Exception   &#123;</span><br><span class="line">&gt;        List&lt;Obj&gt; list = new ArrayList&lt;&gt;();</span><br><span class="line">&gt;        while (true)&#123;</span><br><span class="line">&gt;            list.add(new Obj());</span><br><span class="line">&gt;        &#125;</span><br><span class="line">&gt;    &#125;</span><br><span class="line">&gt;&#125;   </span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>启动参数:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;-Xmx20m -Xmx20m -XX:+HeapDumpOnOutOfMemoryError</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+<p>将堆的最小值-Xms参数与最大值-Xmx参数设置为一样即可避免堆自动扩展，通过参数-XX：+HeapDumpOnOutOfMemoryError可以让虚拟机在出现内存溢<br>  出异常时Dump出当前的内存堆转储快照以便事后进行分析</p>
+<p>要解决这个区域的异常，一般的手段是先通过内存映像分析工具<br><strong>ideal可使用JProfiler和JMeter插件进行分析</strong></p>
+</blockquote>
+</li>
+<li><p>虚拟机栈和本地方法栈溢出</p>
+<blockquote>
+<p><strong>测试代码:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;public static class JavaVMStackSOF &#123;</span><br><span class="line">&gt;    private int stackLength = 1;</span><br><span class="line">&gt;</span><br><span class="line">&gt;    public void stackLeak() &#123;</span><br><span class="line">&gt;        stackLength++;</span><br><span class="line">&gt;        stackLeak();</span><br><span class="line">&gt;    &#125;</span><br><span class="line">&gt;&#125;</span><br><span class="line">&gt;</span><br><span class="line">&gt;    public static void main(String[]args)throws Throwable&#123;</span><br><span class="line">&gt;        JavaVMStackSOF oom=new JavaVMStackSOF();</span><br><span class="line">&gt;        try&#123;</span><br><span class="line">&gt;            oom.stackLeak();</span><br><span class="line">&gt;        &#125;catch(Throwable e)&#123;</span><br><span class="line">&gt;            System.out.println(&quot;stack length：&quot;+oom.stackLength);</span><br><span class="line">&gt;            throw e;</span><br><span class="line">&gt;        &#125;</span><br><span class="line">&gt;    &#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+</ul>
+<pre><code>&gt;**启动参数:**
+&gt;<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;-Xss20m</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+
+&gt;对于HotSpot来说，虽然-Xoss参数（设置本地方法栈大小）存在，但实际上是无效的，栈容量只由-Xss参数设定
+&gt;如果线程请求的栈深度大于虚拟机所允许的最大深度，将抛出StackOverflowError异常。
+
+&gt;如果虚拟机在扩展栈时无法申请到足够的内存空间，则抛出OutOfMemoryError异常。
+
+&gt;这里把异常分成两种情况，看似更加严谨，但却存在着一些互相重叠的地方：当栈空间无法继续分配时，到底是内存太小，还是已使用的栈空间太大，其本质上只是对同一件事情的两种描述而已。
+
+&gt; 在单个线程下，无论是由于栈帧太大还是虚拟机栈容量太小，当内存无法分配的时候，虚拟机抛出的都是StackOverflowError异常。
+</code></pre><ul>
+<li><p>本机直接内存溢出</p>
+<blockquote>
+<p>DirectMemory容量可通过-XX：MaxDirectMemorySize指定，如果不指定，则默认与Java堆最大值（-Xmx指定）一样</p>
+<p><strong>测试代码:</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;public class Tests &#123;</span><br><span class="line">&gt;   private static final Long MB=1024L*1024L;</span><br><span class="line">&gt;   public static void main(String[]args)throws Exception&#123;</span><br><span class="line">&gt;       Field unsafeField=Unsafe.class.getDeclaredFields()[0];</span><br><span class="line">&gt;       unsafeField.setAccessible(true);</span><br><span class="line">&gt;       Unsafe unsafe=(Unsafe)unsafeField.get(null);</span><br><span class="line">&gt;       while(true)&#123;</span><br><span class="line">&gt;           unsafe.allocateMemory(MB);</span><br><span class="line">&gt;       &#125;</span><br><span class="line">&gt;   &#125;</span><br><span class="line">&gt;&#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+</ul>
+<pre><code>&gt;**启动参数:**
+&gt;<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;-Xss20m</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+
+&gt;**代码解释:**
+&gt;越过了DirectByteBuffer类，直接通过反射获取Unsafe实例进行内存分配（Unsafe类的getUnsafe（）方法限制了只有引导类加载器才会返回实例，也就是设计者希望只有rt.jar中的类才能使用Unsafe的功能）。因为，虽然使用DirectByteBuffer分配内存也会抛出内存溢出异常，但它抛出异常时并没有真正向操作系统申请分配内存，而是通过计算得知内存无法分配，于是手动抛出异常，真正申请分配内存的方法是unsafe.allocateMemory（）。
+
+&gt;**由DirectMemory导致的内存溢出，一个明显的特征是在Heap Dump文件中不会看见明显的异常，如果读者发现OOM之后Dump文件很小，而程序中又直接或间接使用了NIO，那就可以考虑检查一下是不是这方面的原因。**
+</code></pre>
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/02/03/深入理解java虚拟机 摘要（四）--垃圾收集器与内存分配策略/" data-toggle="tooltip" data-placement="top"
+                           title="">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/02/03/深入理解java虚拟机 摘要（七）--JDK监控和故障处理工具/" data-toggle="tooltip" data-placement="top"
+                           title="">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#深入理解java虚拟机-摘要"><span class="toc-text">深入理解java虚拟机 摘要</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、自动内存管理机制"><span class="toc-text">一、自动内存管理机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-实战：OutOfMemoryError异常"><span class="toc-text">3. 实战：OutOfMemoryError异常</span></a></li></ol></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/wp771910012">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 王鹏的博客 2018
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://wp771910012.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="http://wangpengblog.oss-cn-hangzhou.aliyuncs.com/1.png">
+</body>
+
+</html>
